@@ -43,8 +43,8 @@ public class DocumentItemProcessor implements
         File targetFile = new File(storagePath, newFileName);
 
         Files.createDirectories(targetFile.getParentFile().toPath()); // ensure parent exists
-
-        Files.copy(originalFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        // on peut eventuellement passer un param pour move / copy
+        Files.move(originalFile.toPath(), targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         document.setStoragePath(targetFile.getAbsolutePath());
         document.setUrl(baseUrl + "/" + newFileName);

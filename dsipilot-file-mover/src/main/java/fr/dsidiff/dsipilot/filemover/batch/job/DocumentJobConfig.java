@@ -14,6 +14,7 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.support.IteratorItemReader;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
@@ -24,10 +25,10 @@ import java.util.Iterator;
 @Configuration
 @RequiredArgsConstructor
 public class DocumentJobConfig {
+    private final ObjectProvider<DocumentJobListener> listenerProvider;
+    private final DocumentRepository repository;
     private final DocumentJobListener jobListener;
     private final DocumentRepository documentRepository;
-    private final DocumentItemProcessor processor;
-    private final DocumentItemWriter writer;
 
     @Bean
     public Job moveDocumentJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
@@ -60,6 +61,6 @@ public class DocumentJobConfig {
     @Bean
     @StepScope
     public DocumentItemWriter writer() {
-        return new DocumentItemWriter(documentRepository);
+        return new DocumentItemWriter(repository, listenerProvider);
     }
 }

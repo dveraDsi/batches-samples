@@ -1,11 +1,13 @@
 package fr.dsidiff.dsipilot.filemover.batch.writer;
 
+import fr.dsidiff.dsipilot.filemover.batch.job.DocumentJobListener;
 import fr.dsidiff.dsipilot.filemover.model.DocumentEntity;
 import fr.dsidiff.dsipilot.filemover.data.DocumentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
@@ -20,9 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
+@StepScope
 @RequiredArgsConstructor
 public class DocumentItemWriter implements ItemWriter<DocumentEntity> {
     private final DocumentRepository documentRepository;
+    private final ObjectProvider<DocumentJobListener> listenerProvider;
+
 
     @Value("#{jobParameters['reportPath']}")
     private String reportPath;
@@ -32,12 +37,17 @@ public class DocumentItemWriter implements ItemWriter<DocumentEntity> {
 
     @Override
     public void write(Chunk<? extends DocumentEntity> items) {
+        DocumentJobListener listener = listenerProvider.getIfAvailable();
         for (DocumentEntity doc : items) {
             try {
                 documentRepository.save(doc);
-                successCount++;
+                if (listener != null) {
+                    listener.incrementMoved();
+                }
             } catch (Exception e) {
-                errors.add(doc.getFilePath() + ": " + e.getMessage());
+                if (listener != null) {
+                    listener.addError(doc.getFilePath() + ": " + e.getMessage());
+                }
             }
         }
     }

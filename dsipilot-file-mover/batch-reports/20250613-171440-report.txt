@@ -1,0 +1,4 @@
+document moved = 0
+document errors = 0
+total duration of batch = 116
+errors:
