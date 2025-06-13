@@ -16,10 +16,37 @@ public class DocumentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * id generated
+     */
     @Column(length = 128, unique = true, nullable = false)
     private String documentId;
 
+    /**
+     * original file path
+     */
     private String filePath;
+    /**
+     * file name
+     */
     private String fileName;
+    /**
+     * file mime type
+     */
     private String fileType;
+    /**
+     * path after file is moved
+     */
+    private String storagePath;
+    /**
+     * url if exists
+     */
+    private String url;
+    /**
+     * check if files is in repository, if not exist: set to false, default value is NULL
+     */
+    @Column(name = "file_exists", nullable = true)
+    private Boolean fileExists;
+
+
 }

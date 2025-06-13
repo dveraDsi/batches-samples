@@ -28,13 +28,14 @@ public class CsvItemProcessor implements ItemProcessor<Map<String, String>, Docu
     public DocumentEntity process(@NonNull Map<String, String> item) throws IOException {
         String documentId = UUID.randomUUID().toString();
         String fileName = item.get(columnProperties.getFileName());
+        Path path = Paths.get(directoryToWatch + File.separator + fileName);
 
         DocumentEntity entity = new DocumentEntity();
         entity.setDocumentId(documentId);
         entity.setFileName(fileName);
-        entity.setFilePath(Paths.get(directoryToWatch, fileName).toString()); // ✅ Fix path formatting
+        entity.setFilePath(path.toString()); // ✅ Fix path formatting
         entity.setFileType(Files.probeContentType(Path.of(fileName)));
-
+        entity.setFileExists(Files.exists(path));
         return entity;
     }
 
