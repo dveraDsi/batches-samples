@@ -4,11 +4,11 @@ output:
   directory: D:\\DSIPILOT_V9\\TESTWRITER\\IN
 
 spring:
+  application:
+    name: dsipilot-csv-parser
   sql:
     init:
       mode: always
-  application:
-    name: dsipilot-csv-parser
   datasource:
     url: jdbc:mysql://localhost:3306/dsipilot_batch?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: root
