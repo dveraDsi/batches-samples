@@ -1,4 +1,4 @@
-package fr.dsidiff.dsipilot.filemover.repositories;
+package fr.dsidiff.dsipilot.filemover.data;
 
 import fr.dsidiff.dsipilot.filemover.model.DocumentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface DocumentRepository extends JpaRepository<DocumentEntity, Long> {
 
-    @Query("SELECT d FROM DocumentEntity d WHERE d.fileExists = true AND d.storagePath IS NULL AND d.url IS NULL")
-    List<DocumentEntity> findPendingDocuments();
+    List<DocumentEntity> findAllByFileExistsTrueAndStoragePathIsNullAndUrlIsNull();
+
 }
